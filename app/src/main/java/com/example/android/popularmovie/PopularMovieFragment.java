@@ -42,7 +42,6 @@ public class PopularMovieFragment extends Fragment {
         gridView = (GridView) rootView.findViewById(R.id.gridview);
         FetchPopularMovie fpm = new FetchPopularMovie();
         fpm.execute("null");
-        //Log.e(LOG_TAG, data.toString());
 
         return rootView;
     }
@@ -55,8 +54,6 @@ public class PopularMovieFragment extends Fragment {
            /* if (params.length == 0) {
                 return null;
             }*/
-
-            //android.os.Debug.waitForDebugger();
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -109,8 +106,6 @@ public class PopularMovieFragment extends Fragment {
                 Log.d(LOG_TAG, "Movie string: " + jsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -150,13 +145,10 @@ public class PopularMovieFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<String> result) {
 
-            android.os.Debug.waitForDebugger();
-
             if (result != null) {
                 adp = new GridViewAdapter(getActivity(), result);
                 gridView.setAdapter(adp);
             }
-            Log.d(LOG_TAG + " onPost", result.toString());
         }
     }
 }

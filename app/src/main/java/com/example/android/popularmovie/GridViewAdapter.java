@@ -1,9 +1,10 @@
 package com.example.android.popularmovie;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -13,12 +14,15 @@ import java.util.ArrayList;
 /**
  * Created by Chen on 7/20/2015.
  */
-public class GridViewAdapter extends BaseAdapter {
+public class GridViewAdapter extends ArrayAdapter {
     private Context context;
     private ArrayList<String> data;
+    private LayoutInflater inflater;
 
     public GridViewAdapter(Context context, ArrayList<String> data) {
+        super(context, R.layout.grid_item_layout, data);
         this.context = context;
+        this.inflater = LayoutInflater.from(context);
         this.data = data;
     }
 
@@ -33,21 +37,17 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = new ImageView(context);
+            convertView = inflater.inflate(R.layout.grid_item_layout, parent, false);
         }
 
         String url = data.get(position);
         Picasso.with(context)
                 .load(url)
                 .placeholder(R.raw.placeholder_image)
+                .error(R.raw.image_not_found)
                 .into((ImageView) convertView);
 
         return convertView;
