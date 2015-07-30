@@ -1,8 +1,10 @@
 package com.example.android.popularmovie;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,14 +36,27 @@ public class PopularMovieFragment extends Fragment {
     public PopularMovieFragment() {
     }
 
+    public void onStart() {
+        super.onStart();
+        update();
+    }
+
+    private void update() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortOrder = sharedPrefs.getString(
+                getString(R.string.pref_order_key),
+                getString(R.string.default_order_preference_pop));
+
+        FetchPopularMovie fpm = new FetchPopularMovie();
+        fpm.execute(sortOrder);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_popular_movie, container, false);
 
         gridView = (GridView) rootView.findViewById(R.id.gridview);
-        FetchPopularMovie fpm = new FetchPopularMovie();
-        fpm.execute("null");
 
         return rootView;
     }
@@ -60,17 +75,17 @@ public class PopularMovieFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String jsonStr = null;
+            String sortOrder = params[0];
 
             try {
 
                 final String BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
                 final String ORDER = "sort_by";
-                final String ORDER_VAL = "popularity.desc";
                 final String API = "api_key";
                 final String KEY = "a94b7c391c5ddc0b2ef8b10460966a65";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(ORDER, ORDER_VAL)
+                        .appendQueryParameter(ORDER, sortOrder+".desc")
                         .appendQueryParameter(API, KEY)
                         .build();
 

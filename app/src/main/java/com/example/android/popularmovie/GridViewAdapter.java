@@ -46,7 +46,7 @@ public class GridViewAdapter extends ArrayAdapter {
         String url = data.get(position);
         Picasso.with(context)
                 .load(url)
-                .placeholder(R.raw.placeholder_image)
+                //.placeholder(R.raw.placeholder_image)
                 .error(R.raw.image_not_found)
                 .into((ImageView) convertView);
 
