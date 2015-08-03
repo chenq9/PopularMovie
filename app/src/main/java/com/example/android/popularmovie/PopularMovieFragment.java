@@ -1,5 +1,6 @@
 package com.example.android.popularmovie;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -54,9 +56,21 @@ public class PopularMovieFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.fragment_popular_movie, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_popular_movie, container, false);
 
         gridView = (GridView) rootView.findViewById(R.id.gridview);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String url = (String) adp.getItem(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, url);
+                startActivity(intent);
+            }
+        });
+
 
         return rootView;
     }
@@ -85,7 +99,7 @@ public class PopularMovieFragment extends Fragment {
                 final String KEY = "a94b7c391c5ddc0b2ef8b10460966a65";
 
                 Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(ORDER, sortOrder+".desc")
+                        .appendQueryParameter(ORDER, sortOrder + ".desc")
                         .appendQueryParameter(API, KEY)
                         .build();
 
@@ -137,7 +151,7 @@ public class PopularMovieFragment extends Fragment {
 
             try {
                 return getUrlFromJson(jsonStr);
-            } catch(JSONException e) {
+            } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }

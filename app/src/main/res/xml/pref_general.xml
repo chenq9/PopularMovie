@@ -4,6 +4,7 @@
     <ListPreference
         android:entries="@array/entries_order_preference"
         android:entryValues="@array/entryvalues_order_preference"
+        android:defaultValue="@string/pref_order_pop"
         android:key="@string/pref_order_key"
         android:title="@string/title_order_preference" />
 
