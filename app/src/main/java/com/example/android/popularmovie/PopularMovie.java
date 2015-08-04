@@ -2,17 +2,44 @@ package com.example.android.popularmovie;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
 public class PopularMovie extends AppCompatActivity {
+    private static final String FRAGMENT = "fragment";
+    private Fragment mFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movie);
+
+        if (savedInstanceState == null) {
+            mFragment = new PopularMovieFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container_main, mFragment)
+                    .commit();
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, FRAGMENT, mFragment);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mFragment = getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT);
+        }
     }
 
 

@@ -38,6 +38,26 @@ public class PopularMovieFragment extends Fragment {
     public PopularMovieFragment() {
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("movies", adp.getData());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            ArrayList<Movie> movieList = savedInstanceState.getParcelableArrayList("movies");
+            adp = new GridViewAdapter(getActivity(), movieList);
+            gridView.setAdapter(adp);
+        } else {
+            update();
+        }
+    }
+
+
     public void onStart() {
         super.onStart();
         update();
