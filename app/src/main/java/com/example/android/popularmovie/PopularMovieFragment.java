@@ -57,32 +57,36 @@ public class PopularMovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_popular_movie, container, false);
-
         gridView = (GridView) rootView.findViewById(R.id.gridview);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String url = (String) adp.getItem(position);
+                String[] movieInfo = new String[6];
+                Movie m = adp.getData().get(position);
+                movieInfo[0] = m.getName();
+                movieInfo[1] = m.getUrl();
+                movieInfo[2] = m.getReleaseDate();
+                movieInfo[3] = m.getLanguage();
+                movieInfo[4] = m.getRating();
+                movieInfo[5] = m.getPlot();
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, url);
+                        .putExtra("movie", movieInfo);
                 startActivity(intent);
             }
         });
-
-
         return rootView;
     }
 
-    public class FetchPopularMovie extends AsyncTask<String, Void, ArrayList<String>> {
+    public class FetchPopularMovie extends AsyncTask<String, Void, ArrayList<Movie>> {
         private final String LOG_TAG = FetchPopularMovie.class.getSimpleName();
 
         @Override
-        protected ArrayList<String> doInBackground(String... params) {
-           /* if (params.length == 0) {
+        protected ArrayList<Movie> doInBackground(String... params) {
+            if (params.length == 0) {
                 return null;
-            }*/
+            }
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -150,7 +154,7 @@ public class PopularMovieFragment extends Fragment {
             }
 
             try {
-                return getUrlFromJson(jsonStr);
+                return getMovieFromJson(jsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -159,20 +163,27 @@ public class PopularMovieFragment extends Fragment {
             return null;
         }
 
-        private ArrayList<String> getUrlFromJson(String movieString) throws JSONException {
+        private ArrayList<Movie> getMovieFromJson(String movieString) throws JSONException {
             JSONObject json = new JSONObject(movieString);
             JSONArray movieArray = json.getJSONArray("results");
 
-            ArrayList<String> movieUrls = new ArrayList<>();
+            ArrayList<Movie> movies = new ArrayList<>();
             for (int i = 0; i < movieArray.length(); i++) {
-                movieUrls.add("http://image.tmdb.org/t/p/w185" + movieArray.getJSONObject(i).getString("poster_path"));
+                Movie m = new Movie();
+                JSONObject j = movieArray.getJSONObject(i);
+                m.setUrl("http://image.tmdb.org/t/p/w185" + j.getString("poster_path"));
+                m.setLanguage(j.getString("original_language"));
+                m.setName(j.getString("original_title"));
+                m.setPlot(j.getString("overview"));
+                m.setRating(j.getString("vote_average"));
+                m.setReleaseDate(j.getString("release_date"));
+                movies.add(m);
             }
-            Log.d(LOG_TAG, movieUrls.toString());
-            return movieUrls;
+            return movies;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> result) {
+        protected void onPostExecute(ArrayList<Movie> result) {
 
             if (result != null) {
                 adp = new GridViewAdapter(getActivity(), result);

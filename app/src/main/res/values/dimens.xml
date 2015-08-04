@@ -8,4 +8,12 @@
     <dimen name="grid_column_width">100dp</dimen>
     <dimen name="grid_vertical_spacing">8dp</dimen>
     <dimen name="grid_horizontal_spacing">8dp</dimen>
+
+    <dimen name="detail_text_large">24dp</dimen>
+    <dimen name="detail_text_mid">20dp</dimen>
+    <dimen name="detail_text_small">16dp</dimen>
+
+    <dimen name="detail_layout_margin">24dp</dimen>
+    <dimen name="detail_LinearLayout_space">12dp</dimen>
+    <dimen name="detail_title_padding">40dp</dimen>
 </resources>

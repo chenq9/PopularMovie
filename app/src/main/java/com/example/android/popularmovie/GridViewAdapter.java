@@ -16,10 +16,10 @@ import java.util.ArrayList;
  */
 public class GridViewAdapter extends ArrayAdapter {
     private Context context;
-    private ArrayList<String> data;
+    private ArrayList<Movie> data;
     private LayoutInflater inflater;
 
-    public GridViewAdapter(Context context, ArrayList<String> data) {
+    public GridViewAdapter(Context context, ArrayList<Movie> data) {
         super(context, R.layout.grid_item_layout, data);
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -43,7 +43,7 @@ public class GridViewAdapter extends ArrayAdapter {
             convertView = inflater.inflate(R.layout.grid_item_layout, parent, false);
         }
 
-        String url = data.get(position);
+        String url = data.get(position).getUrl();
         Picasso.with(context)
                 .load(url)
                 //.placeholder(R.raw.placeholder_image)
@@ -51,5 +51,9 @@ public class GridViewAdapter extends ArrayAdapter {
                 .into((ImageView) convertView);
 
         return convertView;
+    }
+
+    public ArrayList<Movie> getData()  {
+        return data;
     }
 }
